@@ -14,7 +14,6 @@ import styles from "./Home.module.css";
 
 function Home() {
   const navigate = useNavigate();
-  const [school, setSchool] = useState<School | null>(null);
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [dashboardStats, setDashboardStats] = useState<SchoolDashboard | null>(
     null,
@@ -37,22 +36,14 @@ function Home() {
         const [schoolData, tickets] = await Promise.all([
           fetch(`${import.meta.env.VITE_API_URL}/api/schools/me`, { headers }),
           fetch(
-            `${import.meta.env.VITE_API_URL}/api/schools/me/tickets?limit=6`,
+            `${import.meta.env.VITE_API_URL}/api/schools/me/tickets?limit=4`,
             { headers },
           ),
         ]);
-
-        setSchool({
-          id: (auth?.profile as School).id,
-          name: (auth?.profile as School).name,
-        });
         setDashboardStats(await schoolData.json());
         setTickets(await tickets.json());
       } else {
-        const [school, tickets, announcements] = await Promise.all([
-          fetch(`${import.meta.env.VITE_API_URL}/api/parents/me/school`, {
-            headers,
-          }),
+        const [tickets, announcements] = await Promise.all([
           fetch(
             `${import.meta.env.VITE_API_URL}/api/parents/me/tickets?limit=3`,
             { headers },
@@ -63,7 +54,6 @@ function Home() {
           ),
         ]);
 
-        setSchool(await school.json());
         setTickets(await tickets.json());
         setAnnouncements(await announcements.json());
       }
@@ -144,14 +134,14 @@ function Home() {
           <section className={styles.ba_card} aria-labelledby="school-name">
             <figure className={styles.ba_card_header}>
               <img
-                src={`/images/schools/banner-${school?.id ?? 0}.jpg`}
-                alt={`Bannière de l'école ${school?.name}`}
+                src={`/images/schools/banner-${(auth?.profile as School).id ?? 0}.jpg`}
+                alt={`Bannière de l'école ${(auth?.profile as School).name}`}
                 className={styles.school_banner}
                 onError={defaultBanner}
               />
               <figcaption>
                 <h1 id="school-name" className={styles.card_title}>
-                  {school?.name ?? "Chargement de l'école..."}
+                  {(auth?.profile as School).name ?? "Chargement de l'école..."}
                 </h1>
               </figcaption>
             </figure>
@@ -162,7 +152,6 @@ function Home() {
           <section className={styles.left_column}>
             {userRole === "school" ? (
               <article className={styles.stats_section}>
-                {/* <h2 className={styles.section_title}>Indicateurs clés</h2> */}
                 <dl className={styles.stats_list}>
                   {[
                     {

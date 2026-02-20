@@ -5,5 +5,5 @@ export type Parent = {
   genre: "M" | "F";
   photoUrl: string;
   email: string;
-  user_id: number;
+  userId: number;
 };

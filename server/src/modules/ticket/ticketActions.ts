@@ -6,11 +6,10 @@ import studentRepository from "../student/studentRepository";
 import ticketCategoryRepository from "../ticketCategory/ticketCategoryRepository";
 import ticketRepository from "./ticketRepository";
 
-const browseBySchool: RequestHandler = async (req, res, next) => {
+const browseAll: RequestHandler = async (req, res, next) => {
   try {
-    const schoolId = Number(req.auth.sub);
     const limit = req.query.limit ? Number(req.query.limit) : undefined;
-    const tickets = await ticketRepository.readAllBySchool(schoolId, limit);
+    const tickets = await ticketRepository.readAll(limit);
     res.json(tickets);
   } catch (err) {
     next(err);
@@ -65,7 +64,7 @@ const validate: RequestHandler = async (req, res, next) => {
     const studentIds = value.studentIds;
 
     for (const studentId of studentIds) {
-      const currentStudent = await studentRepository.read(studentId);
+      const currentStudent = await studentRepository.readById(studentId);
 
       if (!currentStudent) {
         res
@@ -123,7 +122,9 @@ const editStatus: RequestHandler = async (req, res, next) => {
     }
 
     if (typeof req.body.processed !== "boolean") {
-      res.status(400).json({ error: "processed doit être un boolean" });
+      res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ error: "processed doit être un boolean" });
       return;
     }
     const processed = req.body.processed;
@@ -144,7 +145,7 @@ const editStatus: RequestHandler = async (req, res, next) => {
 };
 
 export default {
-  browseBySchool,
+  browseAll,
   browseByParent,
   add,
   validate,

@@ -19,7 +19,7 @@ class ParentRepository {
     return (rows[0] as Parent) ?? null;
   }
 
-  async readAllBySchool(schoolId: number) {
+  async readAll() {
     const [rows] = await databaseClient.query<Rows>(
       `SELECT DISTINCT
         p.id,
@@ -28,12 +28,7 @@ class ParentRepository {
         p.last_name AS lastName,
         u.email
      FROM parent AS p
-     JOIN user AS u ON u.id = p.user_id
-     JOIN student AS s ON p.id = s.parent_id
-     JOIN classroom AS c ON c.id = s.classroom_id
-     JOIN school AS sch ON sch.id = c.school_id
-     WHERE sch.id = ?`,
-      [schoolId],
+     JOIN user AS u ON u.id = p.user_id`,
     );
 
     return rows as Parent[];
@@ -41,7 +36,11 @@ class ParentRepository {
 
   async readById(parentId: number) {
     const [rows] = await databaseClient.query<Rows>(
-      "SELECT * FROM parent WHERE id = ?",
+      `SELECT 
+        p.id,
+        p.user_id AS userId
+        FROM parent AS p
+        WHERE id = ?`,
       [parentId],
     );
 
@@ -55,18 +54,21 @@ class ParentRepository {
         newParent.firstName,
         newParent.lastName,
         newParent.genre,
-        newParent.user_id,
+        newParent.userId,
       ],
     );
 
     const [rows] = await databaseClient.query<Rows>(
       `SELECT 
-        p.id,
-        p.genre,
-        p.first_name AS firstName,
-        p.last_name AS lastName,
-     FROM parent AS p
-     WHERE p.id = ?`,
+      p.id,
+      p.genre,
+      p.first_name AS firstName,
+      p.last_name AS lastName,
+      u.email
+    FROM parent AS p
+    JOIN user AS u ON u.id = p.user_id
+    WHERE p.id = ?
+     `,
       [result.insertId],
     );
 
@@ -93,7 +95,7 @@ class ParentRepository {
     );
 
     const [updatedRows] = await databaseClient.query<Rows>(
-      `SELECT 
+      `SELECT
         p.id,
         p.genre,
         p.first_name AS firstName,

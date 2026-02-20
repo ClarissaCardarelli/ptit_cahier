@@ -1,6 +1,5 @@
 .overlay {
   position: fixed;
-  /* inset: 0 заменяет top, left, width, height и работает стабильнее */
   inset: 0;
   display: flex;
   align-items: center;
@@ -58,6 +57,25 @@
   color: var(--primary-color-title);
   font-family: var(--font-family-card-title);
   font-size: 1rem;
+}
+
+.form_label_radio {
+  display: flex;
+  flex-direction: row;
+  gap: 3rem;
+  color: var(--primary-color-title);
+  font-family: var(--font-family-card-title);
+  font-size: 1rem;
+}
+
+.form_label_radio legend {
+  padding-bottom: 5px;
+}
+
+.radio_label_title {
+  color: var(--primary-color-text);
+  display: flex;
+  gap: 0.5rem;
 }
 
 .form_input {

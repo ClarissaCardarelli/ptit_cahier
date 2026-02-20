@@ -41,9 +41,7 @@ CREATE TABLE parent (
 
 CREATE TABLE classroom (
     id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(100) NOT NULL,
-    school_id INT UNSIGNED NOT NULL,
-    FOREIGN KEY (school_id) REFERENCES school(id)
+    name VARCHAR(100) NOT NULL
 );
 
 CREATE TABLE announcement (
@@ -52,9 +50,7 @@ CREATE TABLE announcement (
     content VARCHAR(1000) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,        
     announcement_category_id INT UNSIGNED NOT NULL,
-    school_id INT UNSIGNED NOT NULL,
-    FOREIGN KEY (announcement_category_id) REFERENCES announcement_category(id),
-    FOREIGN KEY (school_id) REFERENCES school(id)
+    FOREIGN KEY (announcement_category_id) REFERENCES announcement_category(id)
 );
 
 CREATE TABLE student (
@@ -130,13 +126,13 @@ VALUES
 ("Dupont", "Jean", "M", "/images/parents/parent_profile_male.png", 2),
 ("Martin", "Marie", "F", "/images/parents/parent_profile_female.png", 3);
 
-INSERT INTO classroom (name, school_id)
+INSERT INTO classroom (name)
 VALUES
-("CP Les Petits Dauphins", 1),
-("CE1 Les Explorateurs", 1),
-("CE2 Les Artistes", 1),
-("CM1 Les Genies", 1),
-("CM2 Les Aventuriers", 1);
+("CP"),
+("CE1"),
+("CE2"),
+("CM1"),
+("CM2");
 
 INSERT INTO student (last_name, first_name, classroom_id, parent_id)
 VALUES

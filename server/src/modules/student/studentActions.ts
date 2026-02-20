@@ -16,11 +16,9 @@ const browseByParent: RequestHandler = async (req, res, next) => {
   }
 };
 
-const browseBySchool: RequestHandler = async (req, res, next) => {
+const browseAll: RequestHandler = async (req, res, next) => {
   try {
-    const schoolId = Number(req.auth.sub);
-
-    const students = await studentRepository.readAllBySchool(schoolId);
+    const students = await studentRepository.readAll();
     res.json(students);
   } catch (err) {
     next(err);
@@ -141,7 +139,7 @@ const update: RequestHandler = async (req, res, next) => {
 export default {
   add,
   browseByParent,
-  browseBySchool,
+  browseAll,
   destroy,
   validate,
   update,

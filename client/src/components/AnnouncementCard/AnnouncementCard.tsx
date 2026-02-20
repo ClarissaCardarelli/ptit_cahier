@@ -3,7 +3,6 @@ import { useEffect, useRef, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import type { Announcement } from "../../types/Announcement";
 import type { OutletAuthContext } from "../../types/OutletAuthContext";
-import AnnouncementContentTextarea from "../AnnouncementContentTextarea/AnnouncementContentTextarea";
 import styles from "./AnnouncementCard.module.css";
 
 type AnnouncementCardProps = {
@@ -162,11 +161,6 @@ function AnnouncementCard({
 
         {isEditing ? (
           <div className={styles.edit_block}>
-            <AnnouncementContentTextarea
-              ariaLabel="Modifier le contenu de l'annonce"
-              value={content}
-              onChange={setContent}
-            />
             <div className={styles.edit_actions}>
               <button
                 type="button"

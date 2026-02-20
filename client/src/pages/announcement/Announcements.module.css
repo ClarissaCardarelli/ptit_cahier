@@ -8,7 +8,6 @@
   align-items: center;
   justify-content: center;
   gap: 2rem;
-  margin-bottom: 1.5rem;
   width: 100%;
 }
 
@@ -16,9 +15,8 @@
   width: min(100%, 820px);
   display: flex;
   flex-direction: column;
-  justify-content: center;
   margin: 0 auto;
-  gap: 2rem;
+  gap: 1.5rem;
   padding: 0 1.25rem 3rem 1.25rem;
   min-height: 100vh;
   box-sizing: border-box;

@@ -38,7 +38,7 @@ const ParentsTable = () => {
   }, [auth]);
 
   const deleteParent = (parentId: number) => {
-    if (!window.confirm("Voulez-vous vraiment supprimer cet élève ?")) return;
+    if (!window.confirm("Voulez-vous vraiment supprimer ce parent ?")) return;
 
     fetch(
       `${import.meta.env.VITE_API_URL}/api/schools/me/parents/${parentId}`,
@@ -86,7 +86,7 @@ const ParentsTable = () => {
   };
 
   const newParent: Partial<Parent> = {
-    // email: "",
+    email: "",
     firstName: "",
     lastName: "",
     genre: "M",

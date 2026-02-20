@@ -3,15 +3,12 @@ import type { Rows } from "../../../database/client";
 import type { Classroom } from "../../types/express/Classroom";
 
 class ClassroomRepository {
-  async readAllBySchool(schoolId: number) {
+  async readAll() {
     const [rows] = await databaseClient.query<Rows>(
       `SELECT DISTINCT
         c.id,
         c.name 
-     FROM classroom AS c
-     JOIN school AS sch ON sch.id = c.school_id
-     WHERE sch.id = ?`,
-      [schoolId],
+     FROM classroom AS c`,
     );
 
     return rows as Classroom[];

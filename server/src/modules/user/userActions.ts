@@ -9,7 +9,7 @@ const add: RequestHandler = async (req, res, next) => {
       role: req.body.role,
     };
 
-    req.userId = await userRepository.create(newUser);
+    req.body.userId = await userRepository.create(newUser);
 
     next();
   } catch (err) {

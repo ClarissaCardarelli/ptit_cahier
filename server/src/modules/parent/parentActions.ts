@@ -4,11 +4,9 @@ import joi from "joi";
 import userRepository from "../user/userRepository";
 import parentRepository from "./parentRepository";
 
-const browseBySchool: RequestHandler = async (req, res, next) => {
+const browseAll: RequestHandler = async (req, res, next) => {
   try {
-    const schoolId = Number(req.auth.sub);
-
-    const parents = await parentRepository.readAllBySchool(schoolId);
+    const parents = await parentRepository.readAll();
     res.json(parents);
   } catch (err) {
     next(err);
@@ -35,7 +33,7 @@ const destroy: RequestHandler = async (req, res, next) => {
       return;
     }
 
-    const affectedRows = await userRepository.delete(parent.user_id);
+    const affectedRows = await userRepository.delete(parent.userId);
 
     if (affectedRows === 0) {
       res.status(StatusCodes.NOT_FOUND).json({
@@ -52,14 +50,14 @@ const destroy: RequestHandler = async (req, res, next) => {
 
 const validate: RequestHandler = async (req, res, next) => {
   try {
-    const updatedParent = joi.object({
+    const newParent = joi.object({
       firstName: joi.string().max(120).required(),
       lastName: joi.string().max(120).required(),
-      // email: joi.string().email().max(255).lowercase().required(),
+      email: joi.string().email().max(255).lowercase().required(),
       genre: joi.string().valid("M", "F").required(),
     });
 
-    const { error, value } = updatedParent.validate(req.body);
+    const { error, value } = newParent.validate(req.body);
 
     if (error) {
       res
@@ -68,6 +66,16 @@ const validate: RequestHandler = async (req, res, next) => {
       return;
     }
 
+    const currentEmail = await userRepository.readByEmail(value.email);
+
+    if (currentEmail) {
+      res
+        .status(StatusCodes.CONFLICT)
+        .json({ error: "Adresse mail déjà enregistrée" });
+      return;
+    }
+
+    value.role = "parent";
     req.body = value;
 
     next();
@@ -79,9 +87,7 @@ const validate: RequestHandler = async (req, res, next) => {
 const add: RequestHandler = async (req, res, next) => {
   try {
     const newParent = req.body;
-
     const createdParent = await parentRepository.create(newParent);
-
     res.status(StatusCodes.CREATED).json(createdParent);
   } catch (err) {
     next(err);
@@ -91,7 +97,6 @@ const add: RequestHandler = async (req, res, next) => {
 const update: RequestHandler = async (req, res, next) => {
   try {
     const parentId = Number(req.params.id);
-
     const { firstName, lastName, genre } = req.body;
 
     const updatedParent = await parentRepository.update(parentId, {
@@ -105,10 +110,10 @@ const update: RequestHandler = async (req, res, next) => {
       return;
     }
 
-    res.status(StatusCodes.OK).json(updatedParent);
+    res.json(updatedParent);
   } catch (err) {
     next(err);
   }
 };
 
-export default { add, browseBySchool, destroy, validate, update };
+export default { add, browseAll, destroy, validate, update };

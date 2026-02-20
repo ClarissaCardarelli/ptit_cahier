@@ -12,7 +12,7 @@ type Props = {
 const ParentForm = ({ parent, onCancel, onSave, newParentForm }: Props) => {
   const [firstName, setFirstName] = useState<string>(parent.firstName ?? "");
   const [lastName, setLastName] = useState<string>(parent.lastName ?? "");
-  // const [email, setEmail] = useState<string>(parent.email ?? "");
+  const [email, setEmail] = useState<string>(parent.email ?? "");
   const [genre, setGenre] = useState<"M" | "F">(parent.genre ?? "M");
   const [validateWarning, setValidateWarning] = useState<boolean>(false);
 
@@ -27,7 +27,7 @@ const ParentForm = ({ parent, onCancel, onSave, newParentForm }: Props) => {
   const isUnchanged =
     firstName === parent.firstName &&
     lastName === parent.lastName &&
-    // email === parent.email &&
+    email === parent.email &&
     genre === parent.genre;
 
   const updateParent = (event: React.FormEvent) => {
@@ -40,9 +40,8 @@ const ParentForm = ({ parent, onCancel, onSave, newParentForm }: Props) => {
     onSave({
       firstName,
       lastName,
-      // email,
+      email,
       genre,
-      // user_id: 99,
     });
   };
 
@@ -67,20 +66,9 @@ const ParentForm = ({ parent, onCancel, onSave, newParentForm }: Props) => {
 
       <h2 className={styles.form_title}>{formTitle}</h2>
 
-      {/* <label className={styles.form_label}>
-        Email
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className={styles.form_input}
-          required
-        />
-      </label> */}
-
-      <fieldset className={styles.form_label}>
+      <fieldset className={styles.form_label_radio}>
         <legend>Civilité* :</legend>
-        <label>
+        <label className={styles.radio_label_title}>
           <input
             type="radio"
             name="genre"
@@ -88,9 +76,9 @@ const ParentForm = ({ parent, onCancel, onSave, newParentForm }: Props) => {
             checked={genre === "M"}
             onChange={() => setGenre("M")}
           />
-          M
+          M.
         </label>
-        <label>
+        <label className={styles.radio_label_title}>
           <input
             type="radio"
             name="genre"
@@ -98,7 +86,7 @@ const ParentForm = ({ parent, onCancel, onSave, newParentForm }: Props) => {
             checked={genre === "F"}
             onChange={() => setGenre("F")}
           />
-          F
+          Mme
         </label>
       </fieldset>
 
@@ -119,6 +107,17 @@ const ParentForm = ({ parent, onCancel, onSave, newParentForm }: Props) => {
           type="text"
           value={firstName}
           onChange={(e) => setFirstName(e.target.value)}
+          className={styles.form_input}
+          required
+        />
+      </label>
+
+      <label className={styles.form_label}>
+        Email* :
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           className={styles.form_input}
           required
         />

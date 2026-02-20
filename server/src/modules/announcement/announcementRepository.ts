@@ -4,14 +4,14 @@ import type { Announcement } from "../../types/express/Announcement";
 import type { AnnouncementNew } from "../../types/express/AnnouncementNew";
 
 class AnnouncementRepository {
-  async create(newAnnouncement: AnnouncementNew, schoolId: number) {
+  async create(newAnnouncement: AnnouncementNew) {
     const { title, content, announcementCategoryId, studentIds } =
       newAnnouncement;
 
     const [result] = await databaseClient.query<Result>(
-      `INSERT INTO announcement (title, content, announcement_category_id, school_id)
-			VALUES (?, ?, ?, ?)`,
-      [title, content, announcementCategoryId, schoolId],
+      `INSERT INTO announcement (title, content, announcement_category_id)
+			VALUES (?, ?, ?)`,
+      [title, content, announcementCategoryId],
     );
 
     const newAnnouncementId = result.insertId;
@@ -29,41 +29,41 @@ class AnnouncementRepository {
     return newAnnouncementId;
   }
 
-  async delete(announcementId: number, schoolId: number) {
+  async delete(announcementId: number) {
     await databaseClient.query<Result>(
       "DELETE FROM announcement_student WHERE announcement_id = ?",
       [announcementId],
     );
 
     const [result] = await databaseClient.query<Result>(
-      "DELETE FROM announcement WHERE id = ? AND school_id = ?",
-      [announcementId, schoolId],
+      "DELETE FROM announcement WHERE id = ?",
+      [announcementId],
     );
 
     return result.affectedRows;
   }
 
-  async updateContent(
-    announcementId: number,
-    content: string,
-    schoolId: number,
-  ) {
-    const [rows] = await databaseClient.query<Rows>(
-      "SELECT id FROM announcement WHERE id = ? AND school_id = ?",
-      [announcementId, schoolId],
-    );
+  // async updateContent(
+  //   announcementId: number,
+  //   content: string,
+  //   schoolId: number,
+  // ) {
+  //   const [rows] = await databaseClient.query<Rows>(
+  //     "SELECT id FROM announcement WHERE id = ? AND school_id = ?",
+  //     [announcementId, schoolId],
+  //   );
 
-    if (rows.length === 0) {
-      return 0;
-    }
+  //   if (rows.length === 0) {
+  //     return 0;
+  //   }
 
-    const [result] = await databaseClient.query<Result>(
-      "UPDATE announcement SET content = ? WHERE id = ?",
-      [content, announcementId],
-    );
+  //   const [result] = await databaseClient.query<Result>(
+  //     "UPDATE announcement SET content = ? WHERE id = ?",
+  //     [content, announcementId],
+  //   );
 
-    return result.affectedRows;
-  }
+  //   return result.affectedRows;
+  // }
 
   async readAllByParent(
     parentId: number,
@@ -112,7 +112,7 @@ class AnnouncementRepository {
     return rows as Announcement[];
   }
 
-  async readAllBySchool(schoolId: number, categoryId?: number) {
+  async readAll(categoryId?: number) {
     let sql = `
     SELECT 
       a.id, 
@@ -125,18 +125,16 @@ class AnnouncementRepository {
         SELECT COUNT(*) 
         FROM student s2 
         JOIN classroom c2 ON s2.classroom_id = c2.id 
-        WHERE c2.school_id = ?
       ) AS totalStudents,
       GROUP_CONCAT(DISTINCT CONCAT(s.first_name, ' ', s.last_name) SEPARATOR ', ') AS studentNames,
       GROUP_CONCAT( c.name SEPARATOR ',') AS classroomNames
     FROM announcement AS a
     JOIN announcement_category AS ac ON a.announcement_category_id = ac.id
-    LEFT JOIN announcement_student AS ans ON ans.announcement_id = a.id
-    LEFT JOIN student AS s ON ans.student_id = s.id
-    LEFT JOIN classroom AS c ON s.classroom_id = c.id
-    WHERE a.school_id = ?`;
+    JOIN announcement_student AS ans ON ans.announcement_id = a.id
+    JOIN student AS s ON ans.student_id = s.id
+    JOIN classroom AS c ON s.classroom_id = c.id`;
 
-    const queryParams: (number | string)[] = [schoolId, schoolId];
+    const queryParams = [];
 
     if (categoryId !== undefined && categoryId !== null) {
       sql += " AND a.announcement_category_id = ?";
@@ -145,8 +143,7 @@ class AnnouncementRepository {
 
     sql += `
     GROUP BY a.id, ac.name, a.created_at
-    ORDER BY a.created_at DESC
-  `;
+    ORDER BY a.created_at DESC`;
 
     const [rows] = await databaseClient.query<Rows>(sql, queryParams);
     return rows as Announcement[];
