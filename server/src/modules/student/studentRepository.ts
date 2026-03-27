@@ -82,7 +82,7 @@ class StudentRepository {
         p.first_name AS parentFirstName,
         p.last_name AS parentLastName
      FROM student s
-     JOIN classroom c ON c.id = s.classroom_id
+     LEFT JOIN classroom c ON c.id = s.classroom_id
      LEFT JOIN parent p ON p.id = s.parent_id
      ORDER BY c.name ASC, s.last_name ASC, s.first_name ASC`,
     );
@@ -99,14 +99,10 @@ class StudentRepository {
     return result.affectedRows;
   }
 
-  async update(
-    studentId: number,
-    studentData: Partial<Student>,
-    schoolId: number,
-  ) {
+  async update(studentId: number, studentData: Partial<Student>) {
     const [rows] = await databaseClient.query<Rows>(
       "SELECT * FROM student WHERE id = ?",
-      [studentId, schoolId],
+      [studentId],
     );
 
     if (!rows.length) return null;
@@ -141,7 +137,7 @@ class StudentRepository {
        p.first_name AS parentFirstName,
        p.last_name AS parentLastName
      FROM student s
-     JOIN classroom c ON c.id = s.classroom_id
+     LEFT JOIN classroom c ON c.id = s.classroom_id
      LEFT JOIN parent p ON p.id = s.parent_id
      WHERE s.id = ?`,
       [studentId],

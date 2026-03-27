@@ -4,7 +4,7 @@ import joi from "joi";
 import userRepository from "../user/userRepository";
 import parentRepository from "./parentRepository";
 
-const browseAll: RequestHandler = async (req, res, next) => {
+const browse: RequestHandler = async (req, res, next) => {
   try {
     const parents = await parentRepository.readAll();
     res.json(parents);
@@ -94,7 +94,7 @@ const add: RequestHandler = async (req, res, next) => {
   }
 };
 
-const update: RequestHandler = async (req, res, next) => {
+const edit: RequestHandler = async (req, res, next) => {
   try {
     const parentId = Number(req.params.id);
     const { firstName, lastName, genre } = req.body;
@@ -116,4 +116,4 @@ const update: RequestHandler = async (req, res, next) => {
   }
 };
 
-export default { add, browseAll, destroy, validate, update };
+export default { add, browse, destroy, edit, validate };

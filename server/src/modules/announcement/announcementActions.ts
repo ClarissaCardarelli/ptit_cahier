@@ -47,7 +47,7 @@ const browseByParent: RequestHandler = async (req, res, next) => {
   }
 };
 
-const browseAll: RequestHandler = async (req, res, next) => {
+const browse: RequestHandler = async (req, res, next) => {
   try {
     const categoryId = req.query.category
       ? Number(req.query.category)
@@ -86,36 +86,6 @@ const destroy: RequestHandler = async (req, res, next) => {
     next(err);
   }
 };
-
-// const update: RequestHandler = async (req, res, next) => {
-//   try {
-//     const announcementId = Number(req.params.id);
-
-//     if (!Number.isInteger(announcementId)) {
-//       res
-//         .status(StatusCodes.BAD_REQUEST)
-//         .json({ error: "Identifiant d'annonce invalide" });
-//       return;
-//     }
-
-//     const schoolId = Number(req.auth.sub);
-
-//     const updatedAnnouncement = await announcementRepository.updateContent(
-//       announcementId,
-//       req.body.content,
-//       schoolId,
-//     );
-
-//     if (updatedAnnouncement === 0) {
-//       res.status(StatusCodes.NOT_FOUND).json({ error: "Annonce introuvable" });
-//       return;
-//     }
-
-//     res.sendStatus(StatusCodes.NO_CONTENT);
-//   } catch (err) {
-//     next(err);
-//   }
-// };
 
 const validate: RequestHandler = async (req, res, next) => {
   try {
@@ -173,7 +143,7 @@ const validate: RequestHandler = async (req, res, next) => {
 export default {
   add,
   browseByParent,
-  browseAll,
+  browse,
   destroy,
   validate,
 };

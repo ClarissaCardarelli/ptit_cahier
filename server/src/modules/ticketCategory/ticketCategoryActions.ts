@@ -1,7 +1,7 @@
 import type { RequestHandler } from "express";
 import ticketCategoryRepository from "./ticketCategoryRepository";
 
-const browseAll: RequestHandler = async (req, res, next) => {
+const browse: RequestHandler = async (req, res, next) => {
   try {
     const ticketCategories = await ticketCategoryRepository.readAll();
 
@@ -11,4 +11,4 @@ const browseAll: RequestHandler = async (req, res, next) => {
   }
 };
 
-export default { browseAll };
+export default { browse };

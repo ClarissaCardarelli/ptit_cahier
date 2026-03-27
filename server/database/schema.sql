@@ -41,7 +41,7 @@ CREATE TABLE parent (
 
 CREATE TABLE classroom (
     id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(100) NOT NULL
+    name VARCHAR(120) NOT NULL
 );
 
 CREATE TABLE announcement (

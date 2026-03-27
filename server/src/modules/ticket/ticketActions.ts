@@ -6,7 +6,7 @@ import studentRepository from "../student/studentRepository";
 import ticketCategoryRepository from "../ticketCategory/ticketCategoryRepository";
 import ticketRepository from "./ticketRepository";
 
-const browseAll: RequestHandler = async (req, res, next) => {
+const browse: RequestHandler = async (req, res, next) => {
   try {
     const limit = req.query.limit ? Number(req.query.limit) : undefined;
     const tickets = await ticketRepository.readAll(limit);
@@ -145,7 +145,7 @@ const editStatus: RequestHandler = async (req, res, next) => {
 };
 
 export default {
-  browseAll,
+  browse,
   browseByParent,
   add,
   validate,

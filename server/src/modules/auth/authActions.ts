@@ -87,7 +87,7 @@ const login: RequestHandler = async (req, res, next) => {
     };
 
     const token = await jwt.sign(myPayload, process.env.APP_SECRET as string, {
-      expiresIn: "1h",
+      expiresIn: "72h",
     });
 
     res.json({

@@ -60,15 +60,14 @@ class ParentRepository {
 
     const [rows] = await databaseClient.query<Rows>(
       `SELECT 
-      p.id,
-      p.genre,
-      p.first_name AS firstName,
-      p.last_name AS lastName,
-      u.email
-    FROM parent AS p
-    JOIN user AS u ON u.id = p.user_id
-    WHERE p.id = ?
-     `,
+        p.id,
+        p.genre,
+        p.first_name AS firstName,
+        p.last_name AS lastName,
+        u.email
+      FROM parent AS p
+      JOIN user AS u ON u.id = p.user_id
+      WHERE p.id = ?`,
       [result.insertId],
     );
 
@@ -85,12 +84,11 @@ class ParentRepository {
 
     await databaseClient.query<Result>(
       `UPDATE parent
-      SET
+        SET
         first_name = ?,
         last_name = ?,
         genre = ?
-      WHERE id = ?
-    `,
+        WHERE id = ?`,
       [parentData.firstName, parentData.lastName, parentData.genre, parentId],
     );
 

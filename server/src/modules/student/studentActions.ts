@@ -16,7 +16,7 @@ const browseByParent: RequestHandler = async (req, res, next) => {
   }
 };
 
-const browseAll: RequestHandler = async (req, res, next) => {
+const browse: RequestHandler = async (req, res, next) => {
   try {
     const students = await studentRepository.readAll();
     res.json(students);
@@ -53,14 +53,14 @@ const destroy: RequestHandler = async (req, res, next) => {
 
 const validate: RequestHandler = async (req, res, next) => {
   try {
-    const updatedStudent = joi.object({
+    const student = joi.object({
       firstName: joi.string().max(120).required(),
       lastName: joi.string().max(120).required(),
       classroomId: joi.number().integer().positive().required(),
       parentId: joi.number().integer().positive().allow(null),
     });
 
-    const { error, value } = updatedStudent.validate(req.body);
+    const { error, value } = student.validate(req.body);
 
     if (error) {
       res
@@ -69,13 +69,12 @@ const validate: RequestHandler = async (req, res, next) => {
       return;
     }
 
-    const schoolId = Number(req.auth.sub);
     const classroom = await classroomRepository.readById(value.classroomId);
 
-    if (!classroom || classroom.school_id !== schoolId) {
+    if (!classroom) {
       res
         .status(StatusCodes.UNPROCESSABLE_ENTITY)
-        .json({ error: "Classe introuvable ou non autorisée" });
+        .json({ error: "Classe introuvable" });
       return;
     }
 
@@ -107,30 +106,25 @@ const add: RequestHandler = async (req, res, next) => {
   }
 };
 
-const update: RequestHandler = async (req, res, next) => {
+const edit: RequestHandler = async (req, res, next) => {
   try {
     const studentId = Number(req.params.id);
-    const schoolId = Number(req.auth.sub);
 
     const { firstName, lastName, classroomId, parentId } = req.body;
 
-    const updatedStudent = await studentRepository.update(
-      studentId,
-      {
-        firstName,
-        lastName,
-        classroomId,
-        parentId,
-      },
-      schoolId,
-    );
+    const updatedStudent = await studentRepository.update(studentId, {
+      firstName,
+      lastName,
+      classroomId,
+      parentId,
+    });
 
     if (!updatedStudent) {
       res.status(StatusCodes.NOT_FOUND).json({ error: "Étudiant introuvable" });
       return;
     }
 
-    res.status(StatusCodes.OK).json(updatedStudent);
+    res.json(updatedStudent);
   } catch (err) {
     next(err);
   }
@@ -139,8 +133,8 @@ const update: RequestHandler = async (req, res, next) => {
 export default {
   add,
   browseByParent,
-  browseAll,
+  browse,
   destroy,
+  edit,
   validate,
-  update,
 };

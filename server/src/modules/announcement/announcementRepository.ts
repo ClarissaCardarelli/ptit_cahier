@@ -43,28 +43,6 @@ class AnnouncementRepository {
     return result.affectedRows;
   }
 
-  // async updateContent(
-  //   announcementId: number,
-  //   content: string,
-  //   schoolId: number,
-  // ) {
-  //   const [rows] = await databaseClient.query<Rows>(
-  //     "SELECT id FROM announcement WHERE id = ? AND school_id = ?",
-  //     [announcementId, schoolId],
-  //   );
-
-  //   if (rows.length === 0) {
-  //     return 0;
-  //   }
-
-  //   const [result] = await databaseClient.query<Result>(
-  //     "UPDATE announcement SET content = ? WHERE id = ?",
-  //     [content, announcementId],
-  //   );
-
-  //   return result.affectedRows;
-  // }
-
   async readAllByParent(
     parentId: number,
     categoryId?: number,
