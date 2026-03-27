@@ -30,6 +30,10 @@
 }
 
 .logo {
+  width: 250px;
+}
+
+.logo_small {
   width: 120px;
 }
 

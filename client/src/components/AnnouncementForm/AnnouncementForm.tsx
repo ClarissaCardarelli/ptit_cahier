@@ -1,8 +1,5 @@
 import { useMemo, useState } from "react";
-import { useNavigate } from "react-router";
-import AnnouncementContentTextarea, {
-  MAX_ANNOUNCEMENT_CONTENT_LENGTH,
-} from "../../components/AnnouncementContentTextarea/AnnouncementContentTextarea";
+import { useNavigate } from "react-router-dom";
 import FilterStudent from "../../components/FilterStudents/FilterStudent";
 import type { AnnouncementCategory } from "../../types/AnnouncementCategory";
 import type { AnnouncementNew } from "../../types/AnnouncementNew";
@@ -26,7 +23,7 @@ function AnnouncementForm({
   onSubmit,
   isSubmitting = false,
 }: AnnouncementFormProps) {
-  const [message, setMessage] = useState("");
+  const [messageLength, setMessageLength] = useState<number>(0);
   const [selectedClassroom, setSelectedClassroom] = useState<number[]>([]);
   const [selectedStudent, setSelectedStudent] = useState<number[]>([]);
   const [filterSelectedClassroom, setFilterSelectedClassroom] = useState<
@@ -225,15 +222,14 @@ function AnnouncementForm({
 
           const formData = new FormData(event.currentTarget);
           const title = (formData.get("title") as string).trim();
+          const content = (formData.get("content") as string).trim();
           const announcementCategoryId = Number(
             formData.get("announcementCategoryId"),
           ) as number;
 
-          const trimmedMessage = message.trim();
-
           if (
             !title ||
-            trimmedMessage.length === 0 ||
+            !content ||
             !Number.isInteger(announcementCategoryId) ||
             announcementCategoryId <= 0 ||
             selectedStudent.length === 0
@@ -244,7 +240,7 @@ function AnnouncementForm({
 
           onSubmit({
             title,
-            content: trimmedMessage,
+            content,
             announcementCategoryId,
             studentIds: selectedStudent,
           });
@@ -345,18 +341,21 @@ function AnnouncementForm({
 
         <fieldset className={styles.fieldset_message}>
           <legend className={styles.form_label}>Message* :</legend>
-          <AnnouncementContentTextarea
-            id="content"
-            name="content"
-            ariaRequired
-            maxLength={MAX_ANNOUNCEMENT_CONTENT_LENGTH}
-            placeholder="Écrivez votre annonce"
-            value={message}
-            onChange={(nextValue) => {
-              setMessage(nextValue);
-              clearWarning();
-            }}
-          />
+          <div className={styles.textarea_wrapper}>
+            <textarea
+              id="content"
+              name="content"
+              aria-required="true"
+              className={styles.textarea}
+              maxLength={1000}
+              placeholder="Expliquez votre demande (contexte, date, détails utiles...)"
+              onChange={(e) => {
+                setMessageLength(e.target.value.length);
+                clearWarning();
+              }}
+            />
+            <p className={styles.charcter_counter}>{messageLength} / 1000</p>
+          </div>
         </fieldset>
 
         <div className={styles.ticket_buttons_container}>

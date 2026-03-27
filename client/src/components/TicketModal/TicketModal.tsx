@@ -6,22 +6,29 @@ import styles from "./TicketModal.module.css";
 type TicketModalProps = {
   ticket: Ticket;
   onCloseComplete: () => void;
+  processTicket: (ticketId: number, processed: boolean) => Promise<void>;
+  canProcess: boolean;
 };
 
-const getTicketIconType = (categoryName: string): TicketIconType => {
-  switch (categoryName) {
+const getTicketIconType = (ticketCategoryName: string): TicketIconType => {
+  switch (ticketCategoryName) {
     case "Urgence":
       return "urgent";
     case "Autorisation":
-      return "events";
-    case "Absence":
       return "notice";
+    case "Absence":
+      return "events";
     default:
       return "news";
   }
 };
 
-function TicketModal({ ticket, onCloseComplete }: TicketModalProps) {
+function TicketModal({
+  ticket,
+  onCloseComplete,
+  processTicket,
+  canProcess = true,
+}: TicketModalProps) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const dialogRef = useRef<HTMLDialogElement | null>(null);
 
@@ -142,6 +149,18 @@ function TicketModal({ ticket, onCloseComplete }: TicketModalProps) {
             <p className={styles.messageText}>{ticket.content} </p>
           </div>
         </div>
+
+        {canProcess && (
+          <div className={styles.actions}>
+            <button
+              type="button"
+              className={"primary-button"}
+              onClick={() => processTicket(ticket.id, !ticket.processed)}
+            >
+              {ticket.processed ? "Non traité" : "Traité"}
+            </button>
+          </div>
+        )}
       </dialog>
     </div>
   );

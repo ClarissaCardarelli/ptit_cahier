@@ -78,6 +78,9 @@ function Announcements() {
   };
 
   const deleteAnnouncement = (announcementId: number) => {
+    if (!window.confirm("Voulez-vous vraiment supprimer cette annonce ?"))
+      return;
+
     fetch(
       `${import.meta.env.VITE_API_URL}/api/schools/me/announcements/${announcementId}`,
       {

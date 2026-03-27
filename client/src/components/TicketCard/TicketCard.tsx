@@ -8,22 +8,28 @@ type TicketCardProps = {
   ticket: Ticket;
   onClick: (ticket: Ticket) => void;
   variant?: "default" | "dashboard";
+  showStatusBadge: boolean;
 };
 
 const getTicketIconType = (categoryName: string): TicketIconType => {
   switch (categoryName) {
     case "Urgence":
       return "urgent";
-    case "Autorisation":
-      return "events";
     case "Absence":
+      return "events";
+    case "Autorisation":
       return "notice";
     default:
       return "news";
   }
 };
 
-function TicketCard({ ticket, onClick, variant = "default" }: TicketCardProps) {
+function TicketCard({
+  ticket,
+  onClick,
+  variant = "default",
+  showStatusBadge = false,
+}: TicketCardProps) {
   const { auth } = useOutletContext<OutletAuthContext>();
 
   const userRole = auth?.role;
@@ -36,6 +42,10 @@ function TicketCard({ ticket, onClick, variant = "default" }: TicketCardProps) {
     userRole === "parent"
       ? `Demande pour ${ticket.studentNames}`
       : parentFullName;
+
+  const isProcessed = Boolean(ticket.processed);
+
+  const statusLabel = isProcessed ? "traité" : "non traité";
 
   const createdAtLabel = new Date(ticket.createdAt).toLocaleString("fr-FR", {
     weekday: "long",
@@ -53,7 +63,16 @@ function TicketCard({ ticket, onClick, variant = "default" }: TicketCardProps) {
         variant === "dashboard" ? styles.card_dashboard : ""
       }`}
       data-type={iconType}
+      data-has-badge={showStatusBadge ? "true" : "false"}
     >
+      {showStatusBadge ? (
+        <span
+          className={styles.statusBadge}
+          data-status={isProcessed ? "processed" : "pending"}
+        >
+          {statusLabel}
+        </span>
+      ) : null}
       <div className={styles.leftPanel} aria-hidden="true">
         <div className={styles.iconCircle}>
           <TicketIcon type={iconType} className={styles.icon} />

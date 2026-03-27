@@ -3,11 +3,9 @@
   position: fixed;
   inset: 0;
   z-index: 1000;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   opacity: 0;
   pointer-events: none;
   transition: opacity 220ms ease;
@@ -37,7 +35,6 @@
   position: absolute;
   inset: 0;
   z-index: 1;
-
   border: 0;
   padding: 0;
   background: transparent;
@@ -47,27 +44,19 @@
 .modal {
   position: relative;
   z-index: 2;
-
   width: min(92vw, 820px);
   max-height: 85vh;
   overflow-y: auto;
-
   border: 1px solid color-mix(in srgb, var(--light-grey) 55%, transparent);
   padding: 0;
   border-radius: calc(var(--border-radius) + 6px);
-
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.92),
-    rgba(255, 255, 255, 0.86)
-  );
-
-  box-shadow: 0 24px 60px rgba(15, 23, 41, 0.22), 0 10px 24px
-    rgba(15, 23, 41, 0.12);
-
   transform: translateY(14px) scale(0.985);
-  opacity: 0;
   transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1), opacity 220ms ease;
+  background-color: var(--white);
+}
+
+.modalOpen {
+  transform: translateY(0) scale(1);
 }
 
 .modal[data-type="urgent"] {
@@ -98,11 +87,6 @@
     color-mix(in srgb, var(--blue) 18%, transparent);
 }
 
-.modalOpen {
-  transform: translateY(0) scale(1);
-  opacity: 1;
-}
-
 .modal::backdrop {
   background: transparent;
 }
@@ -116,7 +100,6 @@
   box-shadow: inset 0 -1px 0
     color-mix(in srgb, var(--light-grey) 75%, transparent), inset 0 -2px 0
     rgba(255, 255, 255, 0.45);
-  background-color: var(--white);
 }
 
 .headerLeft {
@@ -129,12 +112,10 @@
 .iconCircle {
   width: 70px;
   height: 70px;
-
   display: flex;
   align-items: center;
   justify-content: center;
   flex: 0 0 auto;
-
   border-radius: 999px;
   background: rgba(248, 250, 252, 0.25);
 }
@@ -148,25 +129,10 @@
 .colorBlock {
   padding: 1rem;
   height: auto;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
-  border-radius: 0;
   flex-shrink: 0;
-}
-
-.colorBlock::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.18),
-    rgba(255, 255, 255, 0)
-  );
-  pointer-events: none;
 }
 
 .urgent {
@@ -210,7 +176,6 @@
 .closeButton {
   width: 40px;
   height: 40px;
-
   display: flex;
   align-items: center;
   justify-content: center;
@@ -218,11 +183,9 @@
   border: none;
   border-radius: 999px;
   background: transparent;
-  align-self: flex-start;
   font-size: 1.6rem;
   line-height: 1;
   color: var(--dark-grey);
-
   cursor: pointer;
   transition: background 160ms ease, color 160ms ease;
 }
@@ -243,7 +206,12 @@
   flex-direction: column;
   gap: 16px;
   padding: 18px 24px 24px;
-  background-color: var(--white);
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 24px 24px;
 }
 
 .infoRow {
@@ -270,18 +238,6 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
-}
-
-.infoLine {
-  margin: 0;
-  font-family: var(--font-family-text);
-  font-size: 0.98rem;
-  color: var(--primary-color-text);
-}
-
-.infoValue {
-  font-family: var(--font-family-button);
-  color: var(--primary-color-title);
 }
 
 .infoLabel {
@@ -375,16 +331,6 @@
   line-height: 1.55;
 }
 
-.namesList {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
 .kvGrid {
   display: grid;
   grid-template-columns: max-content 1fr;
@@ -404,7 +350,6 @@
   margin: 0;
   padding: 0;
   list-style: none;
-
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -435,10 +380,10 @@
   .body {
     padding: 16px 18px 20px;
   }
-  .withDivider {
-    padding-right: 0;
-    border-right: none;
+  .actions {
+    padding: 0 18px 18px;
   }
+
   .infoRow::before {
     content: none;
   }

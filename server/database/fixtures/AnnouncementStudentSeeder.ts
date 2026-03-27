@@ -16,7 +16,7 @@ class AnnouncementStudentSeeder extends AbstractSeeder {
     const students31to50 = Array.from({ length: 20 }, (_, i) => i + 31);
 
     for (let i = 0; i < 2; i++) {
-      const announcementRef = this.getRef(`announcement_1_${i}`);
+      const announcementRef = this.getRef(`announcement_${i}`);
       if (!announcementRef) continue;
 
       for (const studentId of allStudents1to50) {
@@ -28,7 +28,7 @@ class AnnouncementStudentSeeder extends AbstractSeeder {
     }
 
     for (let i = 2; i < 4; i++) {
-      const announcementRef = this.getRef(`announcement_1_${i}`);
+      const announcementRef = this.getRef(`announcement_${i}`);
       if (!announcementRef) continue;
 
       for (const studentId of students1to10) {
@@ -40,7 +40,7 @@ class AnnouncementStudentSeeder extends AbstractSeeder {
     }
 
     for (let i = 4; i < 6; i++) {
-      const announcementRef = this.getRef(`announcement_1_${i}`);
+      const announcementRef = this.getRef(`announcement_${i}`);
       if (!announcementRef) continue;
 
       for (const studentId of students31to50) {
@@ -52,7 +52,7 @@ class AnnouncementStudentSeeder extends AbstractSeeder {
     }
 
     for (let i = 6; i < 11; i++) {
-      const announcementRef = this.getRef(`announcement_1_${i}`);
+      const announcementRef = this.getRef(`announcement_${i}`);
       if (!announcementRef) continue;
 
       const randomStudents = this.faker.helpers.arrayElements(

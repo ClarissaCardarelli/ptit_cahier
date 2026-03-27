@@ -6,11 +6,10 @@ import studentRepository from "../student/studentRepository";
 import ticketCategoryRepository from "../ticketCategory/ticketCategoryRepository";
 import ticketRepository from "./ticketRepository";
 
-const browseBySchool: RequestHandler = async (req, res, next) => {
+const browse: RequestHandler = async (req, res, next) => {
   try {
-    const schoolId = Number(req.auth.sub);
     const limit = req.query.limit ? Number(req.query.limit) : undefined;
-    const tickets = await ticketRepository.readAllBySchool(schoolId, limit);
+    const tickets = await ticketRepository.readAll(limit);
     res.json(tickets);
   } catch (err) {
     next(err);
@@ -65,7 +64,7 @@ const validate: RequestHandler = async (req, res, next) => {
     const studentIds = value.studentIds;
 
     for (const studentId of studentIds) {
-      const currentStudent = await studentRepository.read(studentId);
+      const currentStudent = await studentRepository.readById(studentId);
 
       if (!currentStudent) {
         res
@@ -81,6 +80,8 @@ const validate: RequestHandler = async (req, res, next) => {
         return;
       }
     }
+
+    req.body = value;
 
     next();
   } catch (err) {
@@ -109,9 +110,44 @@ const add: RequestHandler = async (req, res, next) => {
   }
 };
 
+const editStatus: RequestHandler = async (req, res, next) => {
+  try {
+    const ticketId = Number(req.params.id);
+
+    if (!Number.isInteger(ticketId) || ticketId <= 0) {
+      res.status(StatusCodes.BAD_REQUEST).json({
+        error: "Identifiant de ticket invalide",
+      });
+      return;
+    }
+
+    if (typeof req.body.processed !== "boolean") {
+      res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ error: "processed doit être un boolean" });
+      return;
+    }
+    const processed = req.body.processed;
+
+    const wasUpdated = await ticketRepository.updateStatus(ticketId, processed);
+
+    if (!wasUpdated) {
+      res.status(StatusCodes.NOT_FOUND).json({
+        error: "Ticket introuvable",
+      });
+      return;
+    }
+
+    res.status(StatusCodes.OK).json({ id: ticketId, processed });
+  } catch (err) {
+    next(err);
+  }
+};
+
 export default {
-  browseBySchool,
+  browse,
   browseByParent,
   add,
   validate,
+  editStatus,
 };

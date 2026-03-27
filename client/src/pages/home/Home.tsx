@@ -14,7 +14,6 @@ import styles from "./Home.module.css";
 
 function Home() {
   const navigate = useNavigate();
-  const [school, setSchool] = useState<School | null>(null);
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [dashboardStats, setDashboardStats] = useState<SchoolDashboard | null>(
     null,
@@ -37,22 +36,14 @@ function Home() {
         const [schoolData, tickets] = await Promise.all([
           fetch(`${import.meta.env.VITE_API_URL}/api/schools/me`, { headers }),
           fetch(
-            `${import.meta.env.VITE_API_URL}/api/schools/me/tickets?limit=7`,
+            `${import.meta.env.VITE_API_URL}/api/schools/me/tickets?limit=4`,
             { headers },
           ),
         ]);
-
-        setSchool({
-          id: (auth?.profile as School).id,
-          name: (auth?.profile as School).name,
-        });
         setDashboardStats(await schoolData.json());
         setTickets(await tickets.json());
       } else {
-        const [school, tickets, announcements] = await Promise.all([
-          fetch(`${import.meta.env.VITE_API_URL}/api/parents/me/school`, {
-            headers,
-          }),
+        const [tickets, announcements] = await Promise.all([
           fetch(
             `${import.meta.env.VITE_API_URL}/api/parents/me/tickets?limit=3`,
             { headers },
@@ -63,7 +54,6 @@ function Home() {
           ),
         ]);
 
-        setSchool(await school.json());
         setTickets(await tickets.json());
         setAnnouncements(await announcements.json());
       }
@@ -91,11 +81,23 @@ function Home() {
   };
 
   useEffect(() => {
-    if (userRole === "school" || totalSlides <= 1 || isCarouselPaused) return;
+    if (
+      userRole === "school" ||
+      totalSlides <= 1 ||
+      isCarouselPaused ||
+      announcements.length === 0
+    )
+      return;
 
     const autoPlayTimer = setInterval(showNextAnnouncement, 7000);
     return () => clearInterval(autoPlayTimer);
-  }, [totalSlides, isCarouselPaused, showNextAnnouncement, userRole]);
+  }, [
+    totalSlides,
+    isCarouselPaused,
+    showNextAnnouncement,
+    userRole,
+    announcements.length,
+  ]);
 
   const renderTicketsList = () => (
     <ul className={styles.ticket_list}>
@@ -106,6 +108,7 @@ function Home() {
               ticket={ticket}
               variant="dashboard"
               onClick={() => navigate(`/${auth?.role}/tickets`)}
+              showStatusBadge
             />
           </li>
         ))
@@ -125,20 +128,21 @@ function Home() {
         <header className={styles.home_header}>
           <img
             src={ptit_cahier_logo_original}
-            alt="Le P'tit Cahier"
+            alt="P'tit Cahier"
             className={styles.logo}
           />
           <section className={styles.ba_card} aria-labelledby="school-name">
             <figure className={styles.ba_card_header}>
               <img
-                src={`/images/schools/banner-${school?.id ?? 0}.jpg`}
-                alt={`Bannière de l'école ${school?.name}`}
+                src={`/images/schools/banner-${(auth?.profile as School).id ?? 0}.jpg`}
+                alt={`Bannière de l'école ${(auth?.profile as School).name}`}
                 className={styles.school_banner}
                 onError={defaultBanner}
               />
               <figcaption>
                 <h1 id="school-name" className={styles.card_title}>
-                  {school?.name ?? "Chargement de l'école..."}
+                  {(auth?.profile as School).name ??
+                    "École Primaire Émile Zola"}
                 </h1>
               </figcaption>
             </figure>
@@ -149,7 +153,6 @@ function Home() {
           <section className={styles.left_column}>
             {userRole === "school" ? (
               <article className={styles.stats_section}>
-                <h2 className={styles.section_title}>Indicateurs clés</h2>
                 <dl className={styles.stats_list}>
                   {[
                     {
@@ -172,7 +175,10 @@ function Home() {
               </article>
             ) : (
               <section aria-labelledby="messages-title">
-                <h2 id="messages-title" className={styles.section_title}>
+                <h2
+                  id="messages-title"
+                  className={styles.secondary_section_title}
+                >
                   Derniers messages
                 </h2>
                 {renderTicketsList()}
@@ -189,7 +195,11 @@ function Home() {
             className={styles.right_column}
             aria-labelledby="right-col-title"
           >
-            <h2 id="right-col-title" className={styles.section_title}>
+            <h2
+              id="right-col-title"
+              className="primary-title"
+              style={{ textAlign: "center", marginBottom: "2rem" }}
+            >
               {userRole === "school"
                 ? "Derniers Tickets Reçus"
                 : "Fil d'actualité"}
@@ -235,7 +245,10 @@ function Home() {
                       className={styles.carousel_item}
                       aria-hidden={index !== activeSlideIndex}
                     >
-                      <AnnouncementCard announcement={announcement} />
+                      <AnnouncementCard
+                        announcement={announcement}
+                        variant="dashboard"
+                      />
                     </li>
                   ))}
                 </ul>

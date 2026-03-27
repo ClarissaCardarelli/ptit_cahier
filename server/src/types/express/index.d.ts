@@ -5,6 +5,7 @@ declare global {
     export interface Request {
       auth: MyPayload;
       userId: number;
+      schoolId: number;
     }
   }
 }

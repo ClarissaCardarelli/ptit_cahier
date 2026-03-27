@@ -1,13 +1,7 @@
-import { Link } from "react-router";
+import { Navigate } from "react-router-dom";
 
 function PublicHome() {
-  return (
-    <>
-      <div>PublicHome</div>
-      <Link to="/login">LOGIN</Link>
-      <Link to="/register">REGISTER SCHOOL</Link>
-    </>
-  );
+  return <Navigate to="/login" replace />;
 }
 
 export default PublicHome;

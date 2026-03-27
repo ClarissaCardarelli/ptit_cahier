@@ -3,6 +3,10 @@ export type Student = {
   lastName: string;
   firstName: string;
   classroomId: number;
-  parentId: number;
+  classroomName: string;
   schoolId: number;
+  parentId: number | null;
+  parentGenre: string;
+  parentLastName: string;
+  parentFirstName: string;
 };

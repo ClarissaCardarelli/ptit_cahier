@@ -1,0 +1,149 @@
+.landingContainer {
+  font-family: var(--font-family-card-title);
+  color: var(--dark-blue);
+  line-height: 1.6;
+}
+
+.heroSection {
+  background-color: rgba(227, 188, 17, 0.57);
+  padding: 2rem 5%;
+  text-align: center;
+}
+
+.navigationBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4rem;
+}
+
+.logoContainer {
+  gap: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo {
+  width: 150px;
+  height: auto;
+}
+
+.heroContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1100px;
+  margin: 0 auto;
+  text-align: left;
+  gap: 3rem;
+}
+.heroTextGroup {
+  flex: 1;
+}
+
+.mainTitle {
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+  color: #2c3e50;
+}
+
+.heroSubtitle {
+  font-size: 1.2rem;
+  margin-bottom: 2.5rem;
+  opacity: 0.9;
+}
+
+.actionGroup {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+}
+.smartphoneImage {
+  width: 320px;
+  height: auto;
+  filter: drop-shadow(0 15px 30px rgba(0, 0, 0, 0.15));
+  display: flex;
+}
+
+.benefitsSection {
+  background-color: var(--background-grey, #f8f9fa);
+  padding: 5rem 5%;
+  text-align: center;
+}
+
+.sectionTitle {
+  margin-bottom: 3rem;
+  font-size: 2rem;
+}
+
+.featuresGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+}
+
+.featureCard {
+  background: linear-gradient(135deg, #06405a, #165f9e, #0b8fd1);
+  color: white;
+  font-size: var(--font-size-button);
+  padding: 2.5rem;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease;
+}
+
+.featureCard:hover {
+  transform: translateY(-10px);
+}
+
+.featureIconContainer {
+  margin-bottom: 1.5rem;
+}
+
+.emojiIcon {
+  font-size: 3rem;
+  display: block;
+}
+
+.iconImage {
+  width: 110px;
+  height: auto;
+  object-fit: contain;
+  margin: 0 auto 1rem auto;
+}
+
+.securityFooter {
+  padding: 3rem;
+  text-align: center;
+  font-size: 0.9rem;
+  border-top: 1px solid #eee;
+}
+.icon-parent-img {
+  width: 110px;
+  height: auto;
+  object-fit: contain;
+  margin: 0 auto 1rem auto;
+}
+.journal-vie-img {
+  width: 310px;
+  height: auto;
+}
+
+@media (max-width: 900px) {
+  .heroContent {
+    flex-direction: column;
+    text-align: center;
+    padding-top: 2rem;
+  }
+
+  .actionGroup {
+    justify-content: center;
+  }
+
+  .smartphoneImage {
+    width: 250px;
+    margin-top: 3rem;
+  }
+}

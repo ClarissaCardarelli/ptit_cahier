@@ -1,3 +1,4 @@
+import crypto from "node:crypto";
 import argon2 from "argon2";
 import type { RequestHandler } from "express";
 import { StatusCodes } from "http-status-codes";
@@ -12,6 +13,15 @@ interface MyPayload extends JwtPayload {
   sub: string;
   role: "parent" | "school";
 }
+
+const generateTemporaryPassword: RequestHandler = async (req, res, next) => {
+  try {
+    req.body.password = crypto.randomBytes(8).toString("base64url");
+    next();
+  } catch (err) {
+    next(err);
+  }
+};
 
 const hashPassword: RequestHandler = async (req, res, next) => {
   try {
@@ -77,7 +87,7 @@ const login: RequestHandler = async (req, res, next) => {
     };
 
     const token = await jwt.sign(myPayload, process.env.APP_SECRET as string, {
-      expiresIn: "1h",
+      expiresIn: "72h",
     });
 
     res.json({
@@ -95,21 +105,22 @@ const verifyToken: RequestHandler = (req, res, next) => {
     const authorizationHeader = req.get("Authorization");
 
     if (authorizationHeader == null) {
-      throw new Error("Authorization header is missing");
+      res.sendStatus(StatusCodes.UNAUTHORIZED);
+      return;
     }
 
     const [type, token] = authorizationHeader.split(" ");
 
-    if (type !== "Bearer") {
-      throw new Error("Authorization header does not have the 'Bearer' type");
+    if (type !== "Bearer" || !token) {
+      res.sendStatus(StatusCodes.UNAUTHORIZED);
+      return;
     }
 
     req.auth = jwt.verify(token, process.env.APP_SECRET as string) as MyPayload;
 
     next();
   } catch (err) {
-    console.error(err);
-    res.sendStatus(StatusCodes.UNAUTHORIZED);
+    next(err);
   }
 };
 
@@ -129,4 +140,10 @@ const verifyRole = (role: "parent" | "school"): RequestHandler => {
   };
 };
 
-export default { hashPassword, login, verifyToken, verifyRole };
+export default {
+  hashPassword,
+  login,
+  verifyToken,
+  verifyRole,
+  generateTemporaryPassword,
+};

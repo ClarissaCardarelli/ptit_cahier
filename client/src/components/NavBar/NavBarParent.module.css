@@ -85,6 +85,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  height: 130px;
   padding: 22px 16px 18px;
   gap: 10px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.3);

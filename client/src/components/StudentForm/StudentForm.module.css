@@ -1,0 +1,145 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  background: radial-gradient(
+      1200px 600px at 50% 30%,
+      rgba(255, 255, 255, 0.1),
+      transparent 55%
+    ), rgba(15, 23, 41, 0.5);
+
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.warning {
+  color: var(--red);
+  font-family: var(--font-family-text);
+  font-size: var(--font-size-text);
+  text-align: center;
+  margin: 0 auto;
+}
+
+.form_container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1rem;
+  position: relative;
+}
+
+.form_title {
+  text-align: center;
+  margin: 0 0 0.5rem 0;
+  color: var(--primary-color-title);
+  font-family: var(--font-family-primary-title);
+  font-size: var(--font-size-card-title);
+}
+
+.form_label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  color: var(--primary-color-title);
+  font-family: var(--font-family-card-title);
+  font-size: 1rem;
+}
+
+.form_input {
+  padding: 12px 16px;
+  border: 1px solid var(--light-grey);
+  border-radius: var(--border-radius);
+  font-family: var(--font-family-text);
+  font-size: var(--font-size-text);
+  color: var(--black);
+  background-color: var(--background-white);
+  transition: all 180ms ease;
+  outline: none;
+}
+
+.form_input:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--blue) 20%, transparent);
+}
+
+select.form_input {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23075578' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1em;
+  padding-right: 2.5rem;
+}
+
+.ticket_buttons_container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.ticket_buttons_container button {
+  flex: 1;
+  min-width: 140px;
+}
+
+.close_icon_button {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background: var(--white);
+  border: 1px solid var(--light-grey);
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: var(--box-shadow);
+  transition: all 180ms ease;
+  z-index: 10;
+}
+
+.close_icon_button:hover {
+  background: var(--background-grey);
+  transform: scale(1.1);
+}
+
+@media (max-width: 600px) {
+  .form_container {
+    width: 100%;
+    padding: 1.2rem;
+    background-color: transparent;
+    border-radius: var(--border-radius);
+    box-shadow: none;
+    border: none;
+    gap: 1rem;
+  }
+  .ticket_buttons_container {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8rem;
+  }
+  .ticket_buttons_container button {
+    flex: none;
+    width: 100%;
+    max-width: 280px;
+  }
+}

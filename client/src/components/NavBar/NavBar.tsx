@@ -1,3 +1,4 @@
+import { LogOut } from "lucide-react";
 import { useState } from "react";
 import { NavLink, useOutletContext } from "react-router-dom";
 import siteLogo from "../../assets/images/logo_site.png";
@@ -10,20 +11,25 @@ import schoolStyles from "./NavBarSchool.module.css";
 import { getNavItems } from "./navItems";
 
 function NavBar() {
-  const { auth } = useOutletContext<OutletAuthContext>();
+  const { auth, setAuth } = useOutletContext<OutletAuthContext>();
+
+  const logoutUser = () => {
+    localStorage.removeItem("auth");
+    setAuth(null);
+  };
+
+  const isSchool = auth?.role === "school";
+  const styles = isSchool ? schoolStyles : parentStyles;
+
+  const allItems = getNavItems(auth);
+  const menuItems = allItems.filter((item) => item.label !== "Déconnexion");
 
   const displayName =
     auth?.role === "parent"
       ? (auth?.profile as Parent).firstName
       : (auth?.profile as School).name;
 
-  const isSchool = auth?.role === "school";
-
   const avatarSrc = auth?.profile.photoUrl;
-
-  const styles = isSchool ? schoolStyles : parentStyles;
-
-  const items = getNavItems(auth);
 
   const mobileContainerClass = isSchool
     ? schoolStyles.mobileNav
@@ -41,15 +47,11 @@ function NavBar() {
   };
 
   const handleMouseEnter = () => {
-    if (!isPinned) {
-      setIsCollapsed(false);
-    }
+    if (!isPinned) setIsCollapsed(false);
   };
 
   const handleMouseLeave = () => {
-    if (!isPinned) {
-      setIsCollapsed(true);
-    }
+    if (!isPinned) setIsCollapsed(true);
   };
 
   return (
@@ -82,26 +84,26 @@ function NavBar() {
             alt={displayName}
             className={styles.avatar}
           />
-          {!isCollapsed ? (
+          {!isCollapsed && (
             <span className={styles.displayName}>{displayName}</span>
-          ) : null}
+          )}
         </div>
 
         <nav className={styles.nav}>
           <ul className={styles.navList}>
-            {items.map(({ to, label, Icon }) => (
+            {menuItems.map(({ to, label, Icon }) => (
               <li key={to} className={styles.navItem}>
                 <NavLink
-                  to={to}
+                  to={to || "#"}
                   className={({ isActive }) =>
                     `${styles.navLink} ${isActive ? styles.active : ""}`
                   }
                   aria-label={label}
                 >
                   <Icon className={styles.icon} aria-hidden="true" />
-                  {!isCollapsed ? (
+                  {!isCollapsed && (
                     <span className={styles.linkLabel}>{label}</span>
-                  ) : null}
+                  )}
                 </NavLink>
               </li>
             ))}
@@ -109,36 +111,51 @@ function NavBar() {
         </nav>
 
         <div className={styles.footer}>
-          {!isCollapsed ? <LogoutButton /> : null}
+          {!isCollapsed ? (
+            <LogoutButton />
+          ) : (
+            <button
+              type="button"
+              onClick={logoutUser}
+              className={styles.collapsedLogout}
+              aria-label="Déconnexion"
+            >
+              <LogOut className={styles.icon} aria-hidden="true" />
+            </button>
+          )}
 
           <NavLink
-            to={`/${auth?.role}/home`}
+            to={auth?.role ? `/${auth.role}/home` : "/"}
             className={styles.footerLogoLink}
             aria-label="Accueil"
           >
-            <img src={siteLogo} alt="Logo" className={styles.footerLogo} />
+            <img
+              src={siteLogo}
+              alt="P'tit Cahier"
+              className={styles.footerLogo}
+            />
           </NavLink>
 
-          {!isCollapsed ? (
-            <p className={styles.footerText}>Le P'tit Cahier © 2026</p>
-          ) : null}
+          {!isCollapsed && (
+            <p className={styles.footerText}>P'tit Cahier © 2026</p>
+          )}
         </div>
       </aside>
 
       <nav className={mobileContainerClass} aria-label="Navigation mobile">
         <div className={styles.mobileRow}>
           <NavLink
-            to={`/${auth?.role}/home`}
+            to={auth?.role ? `/${auth.role}/home` : "/"}
             className={styles.mobileHome}
             aria-label="Accueil"
           >
             <img src={siteLogo} alt="Logo" className={styles.mobileLogo} />
           </NavLink>
 
-          {items.map(({ to, label, Icon }) => (
+          {menuItems.map(({ to, label, Icon }) => (
             <NavLink
               key={`mobile-${to}`}
-              to={to}
+              to={to || "#"}
               className={({ isActive }) =>
                 `${styles.mobileLink} ${isActive ? styles.active : ""}`
               }
@@ -147,6 +164,15 @@ function NavBar() {
               <Icon className={styles.icon} aria-hidden="true" />
             </NavLink>
           ))}
+
+          <button
+            type="button"
+            onClick={logoutUser}
+            className={styles.mobileLogoutButton}
+            aria-label="Déconnexion"
+          >
+            <LogOut className={styles.icon} aria-hidden="true" />
+          </button>
         </div>
       </nav>
     </>

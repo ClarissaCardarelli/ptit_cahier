@@ -59,7 +59,7 @@ function TicketForm({ ticketCategories, students, onSubmit }: TicketFormProps) {
     >
       <h1 className="primary-title">Nouvelle Demande</h1>
       <p className={styles.form_instructions}>
-        Choisissez un motif, sélectionnez le ou les enfants concernés, puis
+        Choisissez un motif, sélectionnez le ou les élèves concernés, puis
         rédigez votre message.
       </p>
 
@@ -80,9 +80,7 @@ function TicketForm({ ticketCategories, students, onSubmit }: TicketFormProps) {
 
       <fieldset className={styles.fieldset_names}>
         <div className={styles.fieldset_names_wrapper}>
-          <legend className={styles.form_label}>
-            Étudiant(s) concerné(s)* :
-          </legend>
+          <legend className={styles.form_label}>Élève(s) concerné(s)* :</legend>
           <ul>
             {students.map((student) => (
               <li key={student.id}>

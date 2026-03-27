@@ -71,8 +71,7 @@ function Login() {
         }
 
         if (!response.ok) {
-          setLoginErrorWarning(true);
-          return;
+          throw new Error("Échec lors de la connexion");
         }
 
         return response.json();
@@ -82,6 +81,9 @@ function Login() {
         setAuth(auth);
         localStorage.setItem("auth", JSON.stringify(auth));
         navigate(`/${auth.role}/home`);
+      })
+      .catch(() => {
+        setLoginErrorWarning(true);
       });
   };
 
@@ -90,7 +92,7 @@ function Login() {
       <div className={styles.login_container}>
         <img
           src={ptit_cahier_logo_original}
-          alt="Le P'tit Cahier"
+          alt="P'tit Cahier"
           className={styles.logo}
         />
 
@@ -99,7 +101,7 @@ function Login() {
             <p className={styles.parent_message}>
               Pour obtenir vos identifiants
               <br /> de connexion, <br />
-              veuillez vous adresser au représentant de l'école de votre enfant.
+              veuillez vous adresser au représentant de l'école de votre élève.
             </p>
             <button
               onClick={() => {

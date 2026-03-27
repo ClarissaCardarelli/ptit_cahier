@@ -26,7 +26,7 @@ CREATE TABLE school (
     name VARCHAR(120) NOT NULL,
     photo_url VARCHAR(255) NULL,
     user_id INT UNSIGNED NOT NULL UNIQUE,
-    FOREIGN KEY (user_id) REFERENCES user(id)
+    FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE
 );
 
 CREATE TABLE parent (
@@ -36,14 +36,12 @@ CREATE TABLE parent (
     genre ENUM('M', 'F') NOT NULL,
     photo_url VARCHAR(255) NULL,
     user_id INT UNSIGNED NOT NULL UNIQUE,
-    FOREIGN KEY (user_id) REFERENCES user(id)
+    FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE
 );
 
 CREATE TABLE classroom (
     id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(100) NOT NULL,
-    school_id INT UNSIGNED NOT NULL,
-    FOREIGN KEY (school_id) REFERENCES school(id)
+    name VARCHAR(120) NOT NULL
 );
 
 CREATE TABLE announcement (
@@ -52,19 +50,17 @@ CREATE TABLE announcement (
     content VARCHAR(1000) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,        
     announcement_category_id INT UNSIGNED NOT NULL,
-    school_id INT UNSIGNED NOT NULL,
-    FOREIGN KEY (announcement_category_id) REFERENCES announcement_category(id),
-    FOREIGN KEY (school_id) REFERENCES school(id)
+    FOREIGN KEY (announcement_category_id) REFERENCES announcement_category(id)
 );
 
 CREATE TABLE student (
     id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-    last_name VARCHAR(100) NOT NULL,
-    first_name VARCHAR(100) NOT NULL,
+    last_name VARCHAR(120) NOT NULL,
+    first_name VARCHAR(120) NOT NULL,
     classroom_id INT unsigned NOT NULL,
     parent_id INT unsigned NULL,
     FOREIGN KEY (classroom_id) REFERENCES classroom(id),
-    FOREIGN KEY (parent_id) REFERENCES parent(id)
+    FOREIGN KEY (parent_id) REFERENCES parent(id) ON DELETE SET NULL
 );
 
 CREATE TABLE announcement_student (
@@ -79,9 +75,10 @@ CREATE TABLE ticket (
     id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
     content VARCHAR(1000) NOT NULL,    
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    parent_id INT UNSIGNED NOT NULL,
+    processed TINYINT(1) NOT NULL DEFAULT 0,
+    parent_id INT UNSIGNED NULL,
     ticket_category_id INT UNSIGNED NOT NULL,
-    FOREIGN KEY (parent_id) REFERENCES parent(id),
+    FOREIGN KEY (parent_id) REFERENCES parent(id) ON DELETE SET NULL,
     FOREIGN KEY (ticket_category_id) REFERENCES ticket_category(id)
 );
 
@@ -89,7 +86,7 @@ CREATE TABLE ticket_student (
     ticket_id INT UNSIGNED NOT NULL,
     student_id INT UNSIGNED NOT NULL,
     PRIMARY KEY (ticket_id, student_id),
-    FOREIGN KEY (ticket_id) REFERENCES ticket(id),
+    FOREIGN KEY (ticket_id) REFERENCES ticket(id) ON DELETE CASCADE,
     FOREIGN KEY (student_id) REFERENCES student(id) ON DELETE CASCADE
 );
 
@@ -129,13 +126,13 @@ VALUES
 ("Dupont", "Jean", "M", "/images/parents/parent_profile_male.png", 2),
 ("Martin", "Marie", "F", "/images/parents/parent_profile_female.png", 3);
 
-INSERT INTO classroom (name, school_id)
+INSERT INTO classroom (name)
 VALUES
-("CP Les Petits Dauphins", 1),
-("CE1 Les Explorateurs", 1),
-("CE2 Les Artistes", 1),
-("CM1 Les Genies", 1),
-("CM2 Les Aventuriers", 1);
+("CP"),
+("CE1"),
+("CE2"),
+("CM1"),
+("CM2");
 
 INSERT INTO student (last_name, first_name, classroom_id, parent_id)
 VALUES
