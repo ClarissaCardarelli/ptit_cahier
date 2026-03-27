@@ -188,6 +188,7 @@ const StudentsTable = () => {
                           className={styles.edit_button}
                           onClick={() => setSelectedStudent(student)}
                           title="Modifier"
+                          aria-label="Modifier"
                         >
                           <Pencil className={styles.edit_icon} />
                         </button>
@@ -197,6 +198,7 @@ const StudentsTable = () => {
                           className={styles.delete_button}
                           onClick={() => deleteStudent(student.id)}
                           title="Supprimer"
+                          aria-label="Supprimer"
                         >
                           <Trash2 className={styles.delete_icon} />
                         </button>
@@ -217,9 +219,17 @@ const StudentsTable = () => {
               student={selectedStudent}
               classrooms={classrooms}
               parents={parents}
-              onCancel={() => setSelectedStudent(null)}
+              onCancel={() => {
+                setSelectedStudent(null);
+                setFormError(false);
+              }}
               onSave={saveUpdatedStudent}
             />
+            {formError && (
+              <p className={styles.warning} role="alert" aria-live="polite">
+                Une erreur est survenue. Veuillez renvoyer votre demande.
+              </p>
+            )}
           </div>
         </div>
       )}

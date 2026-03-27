@@ -141,7 +141,8 @@ function Home() {
               />
               <figcaption>
                 <h1 id="school-name" className={styles.card_title}>
-                  {(auth?.profile as School).name ?? "Chargement de l'école..."}
+                  {(auth?.profile as School).name ??
+                    "École Primaire Émile Zola"}
                 </h1>
               </figcaption>
             </figure>

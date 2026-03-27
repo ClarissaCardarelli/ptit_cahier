@@ -53,7 +53,6 @@ const ParentForm = ({ parent, onCancel, onSave, newParentForm }: Props) => {
       onSubmit={updateParent}
       onClick={(e) => e.stopPropagation()}
       onKeyDown={(e) => e.stopPropagation()}
-      role="presentation"
     >
       <button
         type="button"

@@ -29,6 +29,10 @@ const StudentForm = ({
   const [parentId, setParentId] = useState<number>(student.parentId ?? 0);
   const [validateWarning, setValidateWarning] = useState<boolean>(false);
 
+  const clearWarnings = () => {
+    setValidateWarning(false);
+  };
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") onCancel();
@@ -50,6 +54,7 @@ const StudentForm = ({
       setValidateWarning(true);
       return;
     }
+
     onSave({
       firstName,
       lastName,
@@ -66,7 +71,6 @@ const StudentForm = ({
       onSubmit={updateStudent}
       onClick={(e) => e.stopPropagation()}
       onKeyDown={(e) => e.stopPropagation()}
-      role="presentation"
     >
       <button
         type="button"
@@ -85,7 +89,10 @@ const StudentForm = ({
           type="text"
           value={lastName}
           maxLength={120}
-          onChange={(e) => setLastName(e.target.value)}
+          onChange={(e) => {
+            setLastName(e.target.value);
+            clearWarnings();
+          }}
           className={styles.form_input}
           required
         />
@@ -97,7 +104,10 @@ const StudentForm = ({
           type="text"
           value={firstName}
           maxLength={120}
-          onChange={(e) => setFirstName(e.target.value)}
+          onChange={(e) => {
+            setFirstName(e.target.value);
+            clearWarnings();
+          }}
           className={styles.form_input}
           required
         />
@@ -107,7 +117,10 @@ const StudentForm = ({
         Classe* :
         <select
           value={classroomId}
-          onChange={(e) => setClassroomId(Number(e.target.value))}
+          onChange={(e) => {
+            setClassroomId(Number(e.target.value));
+            clearWarnings();
+          }}
           className={styles.form_input}
           required
         >
@@ -124,7 +137,10 @@ const StudentForm = ({
         Parent :
         <select
           value={parentId}
-          onChange={(e) => setParentId(Number(e.target.value))}
+          onChange={(e) => {
+            setParentId(Number(e.target.value));
+            clearWarnings();
+          }}
           className={styles.form_input}
           required
         >

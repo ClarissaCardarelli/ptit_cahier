@@ -20,7 +20,7 @@ const Redirection = () => {
           <button
             type="button"
             onClick={() => {
-              auth ? navigate(`/${auth?.role}/home`) : navigate("/");
+              auth ? navigate(`/${auth?.role}/home`) : navigate("/login");
             }}
             className="primary-button"
           >

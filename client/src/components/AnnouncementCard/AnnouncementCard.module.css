@@ -99,7 +99,7 @@
   align-self: center;
   margin: 0;
   font-size: 0.85rem;
-  font-style: italic;
+  font-family: var(--font-family-text);
   color: #9ca3af;
 }
 

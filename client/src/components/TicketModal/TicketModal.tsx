@@ -10,14 +10,14 @@ type TicketModalProps = {
   canProcess: boolean;
 };
 
-const getTicketIconType = (categoryName: string): TicketIconType => {
-  switch (categoryName) {
+const getTicketIconType = (ticketCategoryName: string): TicketIconType => {
+  switch (ticketCategoryName) {
     case "Urgence":
       return "urgent";
     case "Autorisation":
-      return "events";
-    case "Absence":
       return "notice";
+    case "Absence":
+      return "events";
     default:
       return "news";
   }

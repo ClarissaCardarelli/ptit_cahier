@@ -22,7 +22,7 @@ function AnnouncementCard({
   onEdit,
 }: AnnouncementCardProps) {
   const [isImageOpen, setIsImageOpen] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing] = useState(false);
   const [content, setContent] = useState(announcement.content);
   const dialogReference = useRef<HTMLDialogElement>(null);
 
@@ -106,35 +106,35 @@ function AnnouncementCard({
   const canDelete = userRole === "school" && typeof onDelete === "function";
   const canEdit = userRole === "school" && typeof onEdit === "function";
 
-  const startEditing = () => {
-    setContent(announcement.content);
-    setIsEditing(true);
-  };
+  // const startEditing = () => {
+  //   setContent(announcement.content);
+  //   setIsEditing(true);
+  // };
 
-  const cancelEditing = () => {
-    setIsEditing(false);
-    setContent(announcement.content);
-  };
+  // const cancelEditing = () => {
+  //   setIsEditing(false);
+  //   setContent(announcement.content);
+  // };
 
-  const saveEditing = async () => {
-    if (!onEdit) return;
+  // const saveEditing = async () => {
+  //   if (!onEdit) return;
 
-    const trimmedContent = content.trim();
-    if (trimmedContent.length === 0) {
-      return;
-    }
+  //   const trimmedContent = content.trim();
+  //   if (trimmedContent.length === 0) {
+  //     return;
+  //   }
 
-    if (trimmedContent === announcement.content.trim()) {
-      setIsEditing(false);
-      return;
-    }
+  //   if (trimmedContent === announcement.content.trim()) {
+  //     setIsEditing(false);
+  //     return;
+  //   }
 
-    const result = await onEdit(announcement.id, trimmedContent);
+  //   const result = await onEdit(announcement.id, trimmedContent);
 
-    if (result !== false) {
-      setIsEditing(false);
-    }
-  };
+  //   if (result !== false) {
+  //     setIsEditing(false);
+  //   }
+  // };
 
   return (
     <article
@@ -165,14 +165,14 @@ function AnnouncementCard({
               <button
                 type="button"
                 className="non-primary-button"
-                onClick={cancelEditing}
+                // onClick={cancelEditing}
               >
                 Annuler
               </button>
               <button
                 type="button"
                 className="primary-button"
-                onClick={saveEditing}
+                // onClick={saveEditing}
                 disabled={content.trim().length === 0}
               >
                 Enregistrer
@@ -190,7 +190,7 @@ function AnnouncementCard({
                 <button
                   type="button"
                   className={styles.edit_button}
-                  onClick={startEditing}
+                  // onClick={startEditing}
                 >
                   <Pencil className={styles.edit_icon} aria-hidden="true" />
                   <span className={styles.edit_label}>Modifier</span>

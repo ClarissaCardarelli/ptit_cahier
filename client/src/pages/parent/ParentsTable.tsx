@@ -201,6 +201,11 @@ const ParentsTable = () => {
               onCancel={() => setSelectedParent(null)}
               onSave={saveUpdatedParent}
             />
+            {formError && (
+              <p className={styles.warning} role="alert" aria-live="polite">
+                Une erreur est survenue. Veuillez renvoyer votre demande.
+              </p>
+            )}
           </div>
         </div>
       )}
